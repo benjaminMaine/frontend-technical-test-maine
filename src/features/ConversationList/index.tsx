@@ -1,25 +1,27 @@
 import { Stack } from '@chakra-ui/react';
 import { ConversationCard } from '../components/ConversationCard';
-
-import { User } from '../../types/user';
+import useSWR from 'swr';
+import { conversationBySenderIdFetcher } from '../../fetchers/conversationBySenderIdFetcher';
+import { map } from 'lodash';
+import { Loader } from '../../components/Loader';
 
 type ConversationListProps = {
-    user?: User;
+    userId: number | null;
 };
-const ConversationList = ({ user }: ConversationListProps) => {
-    // const { data } = useSWR(['/users', user.id], userFetcher);
+const ConversationList = ({ userId }: ConversationListProps) => {
+    const { isValidating, data: conversations } = useSWR(
+        ['conversations', userId],
+        conversationBySenderIdFetcher
+    );
     return (
-        <Stack flex={1} spacing={3}>
-            <ConversationCard
-                avatar={{ src: '/efez' }}
-                lastMessageTimestamp={123456789}
-                phoneNumber="0680808080"
-            />
-            <ConversationCard
-                avatar={{ src: '/efez' }}
-                lastMessageTimestamp={123456789}
-                phoneNumber="0680808080"
-            />
+        <Stack flex={{ base: 1, lg: 1 }} spacing={3}>
+            {isValidating ? (
+                <Loader />
+            ) : (
+                map(conversations, (conversation) => (
+                    <ConversationCard conversation={conversation} userId={userId} />
+                ))
+            )}
         </Stack>
     );
 };

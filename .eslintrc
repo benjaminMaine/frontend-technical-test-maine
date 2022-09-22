@@ -3,5 +3,8 @@
   "rules": {
     "curly": 2,
     "no-console": [1, { "allow": ["warn", "error"] }]
+  },
+  "env": {
+    "jest": true
   }
 }

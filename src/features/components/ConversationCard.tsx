@@ -1,18 +1,22 @@
-import { ImageProps } from 'next/image';
-import { HStack, Stack, Text } from '@chakra-ui/react';
-import { Avatar } from '../../components/Avatar';
+import { Avatar, HStack, Stack, Text } from '@chakra-ui/react';
+
+import { Conversation } from '../../types/conversation';
+import { messageByConversationIdFetcher } from '../../fetchers/messageByConversationIdFetcher';
+import useSWR from 'swr';
+import { getParticipantNickname } from '../utils/getParticipantNickname';
+import { formatLastMessageDate } from '../utils/formatLastMessageDate';
 
 type ConversationCardProps = {
-    avatar: Omit<ImageProps, 'height' | 'width'>;
-    firstName?: string;
-    phoneNumber: string;
-    lastMessageTimestamp: number;
+    conversation: Conversation;
+    userId: number | null;
 };
-export const ConversationCard = ({
-    avatar,
-    lastMessageTimestamp,
-    phoneNumber,
-}: ConversationCardProps) => {
+export const ConversationCard = ({ conversation, userId }: ConversationCardProps) => {
+    const { data: messages } = useSWR(
+        ['messages', conversation.id],
+        messageByConversationIdFetcher
+    );
+    const { lastMessageTimestamp } = conversation;
+    const participants = getParticipantNickname(conversation, userId);
     return (
         <HStack
             border="1px"
@@ -25,10 +29,12 @@ export const ConversationCard = ({
             py={2}
             h="full"
         >
-            <Avatar />
-            <Stack>
-                <Text>{phoneNumber}</Text>
-                <Text>{lastMessageTimestamp}</Text>
+            <Avatar name={participants} />
+            <Stack textAlign="end">
+                <Text>{participants}</Text>
+                <Text color="gray.500" fontSize="small">
+                    {formatLastMessageDate(lastMessageTimestamp * 1000)}
+                </Text>
             </Stack>
         </HStack>
     );

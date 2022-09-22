@@ -5,7 +5,7 @@ import useSWR from 'swr';
 import { userByIdFetcher } from '../fetchers/userByIdFetcher';
 import { UseDisclosureProps } from '@chakra-ui/hooks';
 
-type HeaderProps = Pick<UseDisclosureProps, 'onOpen'> & { userId?: number };
+type HeaderProps = Pick<UseDisclosureProps, 'onOpen'> & { userId: number | null };
 const Header = ({ onOpen, userId }: HeaderProps) => {
     const { data } = useSWR(['users', userId], userByIdFetcher);
 

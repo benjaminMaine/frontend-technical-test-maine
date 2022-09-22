@@ -6,14 +6,14 @@ import { userByIdFetcher } from '../fetchers/userByIdFetcher';
 import { Loader } from './Loader';
 import { Center, Text } from '@chakra-ui/react';
 
-const Home = ({ userId }: { userId?: number }) => {
+const Home = ({ userId }: { userId: number | null }) => {
     const { isValidating, data } = useSWR(['users', userId], userByIdFetcher);
     if (isValidating) {
         return <Loader size="xl" />;
     }
     return (
         <MainWrapper className={styles.main}>
-            {data?.isLogged ? <ConversationList /> : <HomeEmptyState />}
+            {data?.isLogged ? <ConversationList userId={userId} /> : <HomeEmptyState />}
         </MainWrapper>
     );
 };
