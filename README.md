@@ -69,3 +69,7 @@ If you are out of ideas, here are some thoughts :
 - Our goal is to support everybody in the country, including people with disabilities. As a good citizen and a good developer, can you make sure the app is accessible for everyone ?
 
 - We all love to relax after a hard day’s work. It would be a shame if we didn’t feel confident enough about the upcoming automatic deployment. Are you sure everything has been tested thoroughly ?
+
+# STEP 1 : initialisation
+- add chakra ui to manage in css in app and use chakra components
+- 

@@ -34,3 +34,12 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+#webstorm ide
+/.idea/frontend-technical-test-maine.iml
+/.idea/modules.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/vcs.xml
+/.idea/workspace.xml
+/.idea/jsLinters/eslint.xml
+/.idea/prettier.xml
