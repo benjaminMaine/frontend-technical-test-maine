@@ -50,6 +50,7 @@ const App = ({ fallback }: { fallback: { users?: User[]; userId: number | null }
                         content="Frontend exercise for developpers who want to join us on leboncoin.fr"
                     ></meta>
                 </Head>
+                <Header userId={selectedUserId} onOpen={onOpen} />
                 <ChangeUserModal
                     handleChangeUser={handleChangeUser}
                     isOpen={isOpen}
@@ -57,9 +58,8 @@ const App = ({ fallback }: { fallback: { users?: User[]; userId: number | null }
                     onOpen={onOpen}
                     userId={selectedUserId}
                 />
-                <Header userId={selectedUserId} onOpen={onOpen} />
                 <Home userId={selectedUserId} />
-                {/*<footer className={styles.footer}>&copy; leboncoin - {year}</footer>*/}
+                <footer className={styles.footer}>&copy; leboncoin - {year}</footer>
             </div>
         </SWRConfig>
     );

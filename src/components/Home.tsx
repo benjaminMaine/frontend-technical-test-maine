@@ -1,11 +1,11 @@
 import styles from '../styles/Home.module.css';
 import MainWrapper from './MainWrapper';
-import ConversationList from '../features/ConversationList';
+import ConversationList from '../features/conversation/ConversationList';
 import useSWR from 'swr';
 import { userByIdFetcher } from '../fetchers/userByIdFetcher';
 import { Loader } from './Loader';
 import { Center, Text, useMediaQuery } from '@chakra-ui/react';
-import { Chat } from '../features/chat';
+import { Chat } from '../features/chat/Chat';
 import { RESPONSIVE_MEDIA_QUERIES } from '../constants/responsiveMediaQueries';
 
 const Home = ({ userId }: { userId: number | null }) => {

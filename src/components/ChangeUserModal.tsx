@@ -46,11 +46,16 @@ const ChangeUserModal = ({
     };
     const handleClickConfirmNewUser = () => {
         handleChangeUser(newSelectedUser);
+        handleClose();
+    };
+
+    const handleClose = () => {
+        setNewSelectedUser(null);
         onClose();
     };
 
     return (
-        <Modal isCentered isOpen={isOpen} onClose={onClose} size="lg">
+        <Modal isCentered isOpen={isOpen} onClose={handleClose} size="lg">
             <ModalOverlay />
             <ModalContent mx={4}>
                 {data?.isLogged && <ModalCloseButton />}
