@@ -5,6 +5,8 @@ import { messageByConversationIdFetcher } from '../../fetchers/messageByConversa
 import useSWR from 'swr';
 import { getParticipantNickname } from '../utils/getParticipantNickname';
 import { formatLastMessageDate } from '../utils/formatLastMessageDate';
+import React, { forwardRef } from 'react';
+import { UrlObject } from 'url';
 
 type ConversationCardProps = {
     conversation: Conversation;
@@ -39,3 +41,16 @@ export const ConversationCard = ({ conversation, userId }: ConversationCardProps
         </HStack>
     );
 };
+
+export const ConversationCardWithRef = forwardRef<
+    HTMLAnchorElement,
+    ConversationCardProps & { href?: string }
+>(({ href, ...rest }, ref) => {
+    return (
+        <a ref={ref} href={href}>
+            <ConversationCard {...rest} />
+        </a>
+    );
+});
+
+ConversationCardWithRef.displayName = 'ConversationCardWithRef';
