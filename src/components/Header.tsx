@@ -3,12 +3,12 @@ import useSWR from 'swr';
 import Image from 'next/image';
 import Logo from '../assets/lbc-logo.webp';
 
-import { userByIdFetcher } from '../fetchers/userByIdFetcher';
+import { getUserByIdFetcher } from '../features/auth/fetchers/getUserByIdFetcher';
 import { UseDisclosureProps } from '@chakra-ui/hooks';
 
 type HeaderProps = Pick<UseDisclosureProps, 'onOpen'> & { userId: number | null };
 const Header = ({ onOpen, userId }: HeaderProps) => {
-    const { data } = useSWR(['users', userId], userByIdFetcher);
+    const { data } = useSWR(['users', userId], getUserByIdFetcher);
 
     return (
         <chakra.header
@@ -21,7 +21,6 @@ const Header = ({ onOpen, userId }: HeaderProps) => {
             pb={2}
         >
             <Image src={Logo} alt="Leboncoin Frontend Team" width={160} height={50} />
-            <Flex />
             <Avatar onClick={onOpen} name={data?.user?.nickname} />
         </chakra.header>
     );

@@ -12,8 +12,8 @@ import { isNumber, map } from 'lodash';
 import { ChangeEventHandler, useEffect, useState } from 'react';
 import { SelectOption } from '../types/selectOptions';
 import useSWR from 'swr';
-import { usersFetcher } from '../fetchers/usersFetcher';
-import { userByIdFetcher } from '../fetchers/userByIdFetcher';
+import { getUsersFetcher } from '../features/auth/fetchers/getUsersFetcher';
+import { getUserByIdFetcher } from '../features/auth/fetchers/getUserByIdFetcher';
 
 type ChangeUserModalProps = UseDisclosureProps & {
     handleChangeUser: (id: number) => void;
@@ -26,7 +26,7 @@ const ChangeUserModal = ({
     onOpen,
     userId,
 }: ChangeUserModalProps) => {
-    const { isValidating, data } = useSWR(['users', userId], userByIdFetcher);
+    const { isValidating, data } = useSWR(['users', userId], getUserByIdFetcher);
     const [newSelectedUser, setNewSelectedUser] = useState<number | null>(null);
     useEffect(() => {
         if (!isNumber(userId)) {
@@ -34,7 +34,7 @@ const ChangeUserModal = ({
         }
     }, [userId]);
 
-    const { data: users } = useSWR('users', usersFetcher);
+    const { data: users } = useSWR('users', getUsersFetcher);
     const userOptions: SelectOption[] = map(users, ({ id, nickname }) => ({
         label: nickname,
         value: id,

@@ -3,7 +3,7 @@ import { PropsWithChildren } from 'react';
 
 const MainWrapper = ({ children, ...rest }: PropsWithChildren & { className: string }) => {
     return (
-        <chakra.main display="flex" flex={1} py={8} px={4} {...rest}>
+        <chakra.main display="flex" flex={1} py={8} px={4} overflow="hidden" {...rest}>
             {children}
         </chakra.main>
     );

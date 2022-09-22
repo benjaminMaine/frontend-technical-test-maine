@@ -1,4 +1,4 @@
-import { Conversation } from '../../types/conversation';
+import { Conversation } from '../../../types/conversation';
 
 export const getParticipantNickname = (conversation: Conversation, userId: number): string => {
     const { recipientId, recipientNickname, senderId, senderNickname } = conversation;

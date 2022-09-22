@@ -1,7 +1,7 @@
-import { baseURL } from '../constants/baseURL';
-import { Message } from '../types/message';
+import { baseURL } from '../../../constants/baseURL';
+import { Message } from '../../../types/message';
 
-export const messageByConversationIdFetcher = async (
+export const getMessageByConversationIdFetcher = async (
     resource: string,
     senderId: number
 ): Promise<Message[]> => {

@@ -20,6 +20,7 @@ const colors = {
     },
     orange: {
         main: '#ff6e14',
+        secondary: '#FFE8D2',
     },
     purple: {
         main: '#C3498D',

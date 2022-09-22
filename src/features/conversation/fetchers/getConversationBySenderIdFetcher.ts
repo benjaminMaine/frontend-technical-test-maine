@@ -1,7 +1,7 @@
-import { baseURL } from '../constants/baseURL';
-import { Conversation } from '../types/conversation';
+import { baseURL } from '../../../constants/baseURL';
+import { Conversation } from '../../../types/conversation';
 
-export const conversationBySenderIdFetcher = async (
+export const getConversationBySenderIdFetcher = async (
     resource: string,
     senderId: number
 ): Promise<Conversation[]> => {

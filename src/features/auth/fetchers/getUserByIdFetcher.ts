@@ -1,6 +1,6 @@
-import { User } from '../types/user';
+import { User } from '../../../types/user';
 import { isEmpty, isNumber } from 'lodash';
-import { baseURL } from '../constants/baseURL';
+import { baseURL } from '../../../constants/baseURL';
 import { setCookie, removeCookies } from 'cookies-next';
 
 const NOT_LOGGED_USER = {
@@ -8,7 +8,7 @@ const NOT_LOGGED_USER = {
     user: null,
 };
 
-export const userByIdFetcher = async (
+export const getUserByIdFetcher = async (
     resource: string,
     userId: number
 ): Promise<{ isLogged: boolean; user: User | null }> => {
