@@ -2,7 +2,9 @@
   "extends": ["next", "next/core-web-vitals", "eslint:recommended"],
   "rules": {
     "curly": 2,
-    "no-console": [1, { "allow": ["warn", "error"] }]
+    "no-console": [1, { "allow": ["warn", "error"] }],
+    // ts handle this better (false positive on function arguments)
+    "no-unused-vars": "off"
   },
   "env": {
     "jest": true

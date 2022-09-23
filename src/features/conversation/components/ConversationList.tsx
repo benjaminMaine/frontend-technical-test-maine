@@ -1,39 +1,28 @@
+import React from 'react';
 import { Stack, useMediaQuery } from '@chakra-ui/react';
-import { ConversationCard, ConversationCardWithRef } from './ConversationCard';
+import { ConversationCard } from './ConversationCard';
 import { map } from 'lodash';
 import { Loader } from '../../../components/Loader';
 import { RESPONSIVE_MEDIA_QUERIES } from '../../../constants/responsiveMediaQueries';
-import Link from 'next/link';
 import { Conversation } from '../../../types/conversation';
-import React, { MouseEventHandler } from 'react';
-import { useDisclosure } from '@chakra-ui/hooks';
-import MobileChatDrawer from '../../chat/components/MobileChatDrawer';
 import { MobileConversationCard } from './MobileConversationCard';
 
 type ConversationListProps = {
     conversations: Conversation[];
+    handleClickConversationCard: (id: Conversation['id']) => void;
     isLoading: boolean;
-    selectedConversationId: number | null;
-    setSelectedConversationId: React.Dispatch<number | null>;
-    userId: number | null;
+    selectedConversationId: Conversation['id'] | null;
 };
 const ConversationList = ({
     conversations,
+    handleClickConversationCard,
     isLoading,
     selectedConversationId,
-    setSelectedConversationId,
-    userId,
 }: ConversationListProps) => {
     const [isMobile] = useMediaQuery(RESPONSIVE_MEDIA_QUERIES.IS_MOBILE);
 
-    const handleClickConversationCard =
-        (id: number): MouseEventHandler<HTMLDivElement> =>
-        () => {
-            setSelectedConversationId(id);
-        };
-
     return (
-        <Stack spacing={3} flex={1} overflowY="auto">
+        <Stack data-testid="conversation-list" spacing={3} flex={1} overflowY="auto">
             {isLoading ? (
                 <Loader />
             ) : (
@@ -41,17 +30,16 @@ const ConversationList = ({
                     isMobile ? (
                         <MobileConversationCard
                             conversation={conversation}
+                            handleClickConversationCard={handleClickConversationCard}
+                            key={conversation.id}
                             selectedConversationId={selectedConversationId}
-                            setSelectedConversationId={setSelectedConversationId}
-                            userId={userId}
                         />
                     ) : (
                         <ConversationCard
-                            key={conversation.id}
                             conversation={conversation}
+                            onClick={handleClickConversationCard}
+                            key={conversation.id}
                             isSelected={conversation.id === selectedConversationId}
-                            onClick={handleClickConversationCard(conversation.id)}
-                            userId={userId}
                         />
                     )
                 )

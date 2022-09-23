@@ -1,26 +1,18 @@
-// const { mutate } = useSWRConfig()
-
 import { baseURL } from '../../../constants/baseURL';
+import { Message } from '../../../types/message';
 
-type NewMessageDTO = {
-    authorId: number;
-    body: string;
-    conversationId: number;
-    timestamp: number;
-};
+type NewMessageDTO = Omit<Message, 'id'>;
 
-export const postNewMessage = async (payload: Omit<NewMessageDTO, 'timestamp'>) => {
-    const timestamp = new Date().getTime();
+export const postNewMessage = async (payload: NewMessageDTO) => {
     const body: NewMessageDTO = {
         ...payload,
-        timestamp,
     };
-    const res = await fetch(`${baseURL}/messages/${payload.conversationId}`, {
+    const result = await fetch(`${baseURL}/messages/${payload.conversationId}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(body),
     }).then((res) => res.json());
-    return res;
+    return result;
 };

@@ -4,9 +4,9 @@ import { getLoggedUserId } from '../features/auth/utils/getLoggedUserId';
 import { baseURL } from '../constants/baseURL';
 import Home from '../components/Home';
 import { GetServerSidePropsContext } from 'next/types';
-
 import { MainLayout } from '../components/MainLayout';
-import { useState } from 'react';
+import { UserId } from '../types/userId';
+import { UserContextProvider } from '../contexts/useUserIdContext';
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
     const {
@@ -26,16 +26,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     };
 }
 
-const App = ({ fallback }: { fallback: { users?: User[]; userId: number | null } }) => {
-    const [selectedUserId, setSelectedUserId] = useState<number | null>(fallback.userId || null);
-    const handleChangeUser = (id: number) => {
-        setSelectedUserId(id);
-    };
+const App = ({ fallback }: { fallback: { users?: User[]; userId: UserId } }) => {
     return (
         <SWRConfig value={{ fallback }}>
-            <MainLayout userId={selectedUserId} handleChangeUser={handleChangeUser}>
-                <Home userId={selectedUserId} />
-            </MainLayout>
+            <UserContextProvider userId={fallback.userId}>
+                <MainLayout>
+                    <Home />
+                </MainLayout>
+            </UserContextProvider>
         </SWRConfig>
     );
 };

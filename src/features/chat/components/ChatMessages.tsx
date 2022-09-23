@@ -1,25 +1,27 @@
+import { useEffect, useRef } from 'react';
 import { Center, Stack, Text } from '@chakra-ui/react';
 import ChatMessage from './ChatMessage';
 import useSWR from 'swr';
 import { getMessageByConversationIdFetcher } from '../fetchers/getMessageByConversationIdFetcher';
 import { isEmpty, map } from 'lodash';
 import { Loader } from '../../../components/Loader';
-import { useEffect, useRef } from 'react';
+import { useUserIdContext } from '../../../contexts/useUserIdContext';
+import { Conversation } from '../../../types/conversation';
 type ChatMessagesProps = {
-    conversationId: number;
-    userId: number | null;
+    conversationId: Conversation['id'];
     title: string;
 };
-const ChatMessages = ({ conversationId, userId, title }: ChatMessagesProps) => {
-    const bottomRef = useRef<HTMLDivElement>(null);
+const ChatMessages = ({ conversationId, title }: ChatMessagesProps) => {
+    const { user } = useUserIdContext();
+    const messagesContainerRef = useRef<HTMLDivElement>(null);
     const { isValidating: isValidatingMessages, data: messages } = useSWR(
         ['messages', conversationId],
         getMessageByConversationIdFetcher
     );
 
     useEffect(() => {
-        if (bottomRef?.current) {
-            bottomRef?.current?.scrollIntoView({ behavior: 'smooth' });
+        if (messagesContainerRef?.current) {
+            messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
         }
     }, [messages]);
 
@@ -29,16 +31,22 @@ const ChatMessages = ({ conversationId, userId, title }: ChatMessagesProps) => {
     if (isEmpty(messages)) {
         return <EmptyState title={title} />;
     }
+
     return (
-        <Stack justifyContent="space-between" overflowY="auto" px={4} spacing={3}>
+        <Stack
+            justifyContent="space-between"
+            overflowY="auto"
+            px={4}
+            spacing={3}
+            ref={messagesContainerRef}
+        >
             {map(messages, (message) => (
                 <ChatMessage
                     key={message.id}
-                    isFromSender={userId === message.authorId}
+                    isFromSender={user.id === message.authorId}
                     message={message}
                 />
             ))}
-            <div ref={bottomRef} />
         </Stack>
     );
 };
@@ -47,7 +55,7 @@ export default ChatMessages;
 
 const EmptyState = ({ title }: Pick<ChatMessagesProps, 'title'>) => {
     return (
-        <Center height="full">
+        <Center height="full" mt={4}>
             <Text fontSize="xl" textAlign="center">
                 This is the first time you send a message to {title}
             </Text>

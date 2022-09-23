@@ -1,3 +1,4 @@
+import { ChangeEventHandler, useEffect, useState } from 'react';
 import {
     Modal,
     ModalBody,
@@ -9,30 +10,26 @@ import {
 import { UseDisclosureProps } from '@chakra-ui/hooks';
 import { Button, Flex, Select, Stack } from '@chakra-ui/react';
 import { isNumber, map } from 'lodash';
-import { ChangeEventHandler, useEffect, useState } from 'react';
-import { SelectOption } from '../types/selectOptions';
+import { SelectOption } from '../../../types/selectOptions';
 import useSWR from 'swr';
-import { getUsersFetcher } from '../features/auth/fetchers/getUsersFetcher';
-import { getUserByIdFetcher } from '../features/auth/fetchers/getUserByIdFetcher';
+import { getUsersFetcher } from '../fetchers/getUsersFetcher';
+import { useUserIdContext } from '../../../contexts/useUserIdContext';
+import { UserId } from '../../../types/userId';
 
 type ChangeUserModalProps = UseDisclosureProps & {
-    handleChangeUser: (id: number) => void;
-    userId: number | null;
+    handleChangeUser: (id: UserId) => void;
 };
-const ChangeUserModal = ({
-    handleChangeUser,
-    isOpen,
-    onClose,
-    onOpen,
-    userId,
-}: ChangeUserModalProps) => {
-    const { isValidating, data } = useSWR(['users', userId], getUserByIdFetcher);
-    const [newSelectedUser, setNewSelectedUser] = useState<number | null>(null);
+const ChangeUserModal = ({ handleChangeUser, isOpen, onClose, onOpen }: ChangeUserModalProps) => {
+    const { user } = useUserIdContext();
+    const [newSelectedUserId, setNewSelectedUserId] = useState<UserId>(
+        isNumber(user?.id) ? user.id : null
+    );
     useEffect(() => {
-        if (!isNumber(userId)) {
+        if (!isNumber(newSelectedUserId)) {
             onOpen();
+            return;
         }
-    }, [userId]);
+    }, [onOpen, newSelectedUserId]);
 
     const { data: users } = useSWR('users', getUsersFetcher);
     const userOptions: SelectOption[] = map(users, ({ id, nickname }) => ({
@@ -42,23 +39,29 @@ const ChangeUserModal = ({
     const handleChangeSelectedUser: ChangeEventHandler<HTMLSelectElement> = ({
         target: { value },
     }) => {
-        isNumber(+value) && setNewSelectedUser(+value);
+        isNumber(+value) && setNewSelectedUserId(+value);
     };
     const handleClickConfirmNewUser = () => {
-        handleChangeUser(newSelectedUser);
-        handleClose();
+        handleChangeUser(newSelectedUserId);
+        onClose();
     };
 
     const handleClose = () => {
-        setNewSelectedUser(null);
+        setNewSelectedUserId(null);
         onClose();
     };
 
     return (
-        <Modal isCentered isOpen={isOpen} onClose={handleClose} size="lg">
+        <Modal
+            closeOnOverlayClick={!!user}
+            isCentered
+            isOpen={isOpen}
+            onClose={handleClose}
+            size="lg"
+        >
             <ModalOverlay />
             <ModalContent mx={4}>
-                {data?.isLogged && <ModalCloseButton />}
+                {user && <ModalCloseButton />}
                 <ModalHeader as={Flex} justifyContent="center">
                     Please sign in
                 </ModalHeader>
@@ -71,7 +74,7 @@ const ChangeUserModal = ({
                         ))}
                     </Select>
                     <Button
-                        disabled={!isNumber(newSelectedUser)}
+                        disabled={!isNumber(newSelectedUserId)}
                         onClick={handleClickConfirmNewUser}
                     >
                         Confirm

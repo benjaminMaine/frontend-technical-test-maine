@@ -1,29 +1,56 @@
+import { ChangeEventHandler, KeyboardEventHandler, MouseEventHandler, useState } from 'react';
 import { Button, HStack, Input } from '@chakra-ui/react';
-import { useSWRConfig } from 'swr';
-import { ChangeEventHandler, MouseEventHandler, useState } from 'react';
+import useSWR, { useSWRConfig } from 'swr';
 import { postNewMessage } from '../fetchers/postNewMessage';
+import { Conversation } from '../../../types/conversation';
+import { useUserIdContext } from '../../../contexts/useUserIdContext';
+import { getMessageByConversationIdFetcher } from '../fetchers/getMessageByConversationIdFetcher';
 
+const ENTER_KEY = 'Enter';
 type ChatFooterProps = {
-    conversationId: number;
-    userId: number;
+    conversationId: Conversation['id'];
 };
-const ChatFooter = ({ conversationId, userId }: ChatFooterProps) => {
+const ChatFooter = ({ conversationId }: ChatFooterProps) => {
+    const { user } = useUserIdContext();
     const [message, setMessage] = useState('');
     const { mutate } = useSWRConfig();
+    const { data: messages } = useSWR(
+        ['messages', conversationId],
+        getMessageByConversationIdFetcher
+    );
     const handleChangeMessage: ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
         setMessage(value);
     };
 
+    const sendMessage = async () => {
+        const timestamp = new Date().getTime();
+        const payload = {
+            authorId: user.id,
+            body: message,
+            conversationId,
+            timestamp,
+        };
+        await mutate(
+            ['messages', conversationId],
+            () => {
+                postNewMessage(payload);
+                setMessage('');
+            },
+            {
+                optimisticData: [...messages, { ...payload, id: 45 }],
+                populateCache: true,
+                revalidate: true,
+            }
+        );
+    };
+    const handleKeyDownMessage: KeyboardEventHandler = ({ key }) => {
+        if (key === ENTER_KEY && message) {
+            sendMessage();
+        }
+    };
+
     const handleClickSendMessage: MouseEventHandler<HTMLButtonElement> = () => {
-        mutate(['messages', conversationId], () => {
-            const payload = {
-                authorId: userId,
-                body: message,
-                conversationId,
-            };
-            postNewMessage(payload);
-            setMessage('');
-        });
+        sendMessage();
     };
     return (
         <HStack
@@ -33,8 +60,15 @@ const ChatFooter = ({ conversationId, userId }: ChatFooterProps) => {
             p={3}
             justifyContent="space-between"
         >
-            <Input placeholder="Aa" value={message} onChange={handleChangeMessage} />
-            <Button onClick={handleClickSendMessage}>Send</Button>
+            <Input
+                onChange={handleChangeMessage}
+                onKeyDown={handleKeyDownMessage}
+                placeholder="Aa"
+                value={message}
+            />
+            <Button onClick={handleClickSendMessage} disabled={!message}>
+                Send
+            </Button>
         </HStack>
     );
 };

@@ -4,13 +4,14 @@ import { Conversation } from '../../../types/conversation';
 import { getParticipantNickname } from '../../conversation/utils/getParticipantNickname';
 import ChatMessages from './ChatMessages';
 import ChatFooter from './ChatFooter';
+import { useUserIdContext } from '../../../contexts/useUserIdContext';
 
 type ChatProps = ChakraProps & {
     conversation: Conversation;
-    userId: number | null;
 };
-export const Chat = ({ conversation, userId, ...styles }: ChatProps) => {
-    const participants = getParticipantNickname(conversation, userId);
+export const Chat = ({ conversation, ...styles }: ChatProps) => {
+    const { user } = useUserIdContext();
+    const participants = getParticipantNickname(conversation, user.id);
 
     return (
         <Stack
@@ -23,15 +24,11 @@ export const Chat = ({ conversation, userId, ...styles }: ChatProps) => {
             spacing={3}
             {...styles}
         >
-            <Stack>
+            <Stack overflowY="hidden">
                 <ChatHeader title={participants} />
-                <ChatMessages
-                    conversationId={conversation.id}
-                    userId={userId}
-                    title={participants}
-                />
+                <ChatMessages conversationId={conversation.id} title={participants} />
             </Stack>
-            <ChatFooter conversationId={conversation.id} userId={userId} />
+            <ChatFooter conversationId={conversation.id} />
         </Stack>
     );
 };

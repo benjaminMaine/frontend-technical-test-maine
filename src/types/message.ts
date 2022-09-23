@@ -1,7 +1,7 @@
 export interface Message {
-  id: number
-  conversationId: number
-  authorId: number
-  timestamp: number
-  body: string
+    authorId: number;
+    body: string;
+    conversationId: number;
+    id: number;
+    timestamp: number;
 }

@@ -1,35 +1,33 @@
+import React from 'react';
 import { Conversation } from '../../../types/conversation';
-import React, { MouseEventHandler } from 'react';
 import MobileChatDrawer from '../../chat/components/MobileChatDrawer';
 import { useDisclosure } from '@chakra-ui/hooks';
 import { ConversationCard } from './ConversationCard';
 import { getParticipantNickname } from '../utils/getParticipantNickname';
+import { useUserIdContext } from '../../../contexts/useUserIdContext';
 
 type MobileConversationCardProps = {
     conversation: Conversation;
-    selectedConversationId: number | null;
-    setSelectedConversationId: React.Dispatch<number | null>;
-    userId: number | null;
+    selectedConversationId: Conversation['id'] | null;
+    handleClickConversationCard: (id: Conversation['id'] | null) => void;
 };
 export const MobileConversationCard = ({
     conversation,
     selectedConversationId,
-    setSelectedConversationId,
-    userId,
+    handleClickConversationCard,
 }: MobileConversationCardProps) => {
+    const { user } = useUserIdContext();
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const handleClickMobileConversationCard =
-        (id: number): MouseEventHandler<HTMLDivElement> =>
-        () => {
-            onOpen();
-            setSelectedConversationId(id);
-        };
+    const handleClickMobileConversationCard = (id: Conversation['id']) => {
+        onOpen();
+        handleClickConversationCard(id);
+    };
 
     const handleClose = () => {
-        setSelectedConversationId(null);
+        handleClickConversationCard(null);
         onClose();
     };
-    const participants = getParticipantNickname(conversation, userId);
+    const participants = getParticipantNickname(conversation, user.id);
 
     return (
         <>
@@ -38,14 +36,12 @@ export const MobileConversationCard = ({
                 isOpen={isOpen}
                 onClose={handleClose}
                 title={participants}
-                userId={userId}
             />
             <ConversationCard
                 key={conversation.id}
                 conversation={conversation}
+                onClick={handleClickMobileConversationCard}
                 isSelected={conversation.id === selectedConversationId}
-                onClick={handleClickMobileConversationCard(conversation.id)}
-                userId={userId}
             />
         </>
     );

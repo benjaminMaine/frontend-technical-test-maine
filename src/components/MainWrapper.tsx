@@ -1,5 +1,5 @@
-import { chakra } from '@chakra-ui/react';
 import { PropsWithChildren } from 'react';
+import { chakra } from '@chakra-ui/react';
 
 const MainWrapper = ({ children, ...rest }: PropsWithChildren & { className: string }) => {
     return (
