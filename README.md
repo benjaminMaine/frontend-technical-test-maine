@@ -70,15 +70,24 @@ If you are out of ideas, here are some thoughts :
 
 - We all love to relax after a hard day’s work. It would be a shame if we didn’t feel confident enough about the upcoming automatic deployment. Are you sure everything has been tested thoroughly ?
 
-# STEP 1 : initialisation
+## STEP 1 : initialisation
 - add chakra ui to manage in css in app and use chakra components
 - organise page with an Header and a Home components
 - fetch all users and current user server side
 
-# STEP 2 : Conversation
+## STEP 2 : Conversation
 - Display the list of conversations and y default (only on desktop) open the latest conversation
 - for mobile create a drawer to display messages 
 
-# STEP 3 : Messages
+## STEP 3 : Messages
 - display all messages and format them differently depending if they come from the sender or not
 - send a new message and store it in db 
+
+## With more time I would have done
+
+- rtl test on Chat
+- virtualize message list
+- a feature to change the conversation name
+- enable to create a discussion
+- enable to create a discussion with more than 2 users 
+- optimization of webp image 
