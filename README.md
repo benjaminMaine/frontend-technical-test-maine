@@ -72,4 +72,13 @@ If you are out of ideas, here are some thoughts :
 
 # STEP 1 : initialisation
 - add chakra ui to manage in css in app and use chakra components
-- 
+- organise page with an Header and a Home components
+- fetch all users and current user server side
+
+# STEP 2 : Conversation
+- Display the list of conversations and y default (only on desktop) open the latest conversation
+- for mobile create a drawer to display messages 
+
+# STEP 3 : Messages
+- display all messages and format them differently depending if they come from the sender or not
+- send a new message and store it in db 
